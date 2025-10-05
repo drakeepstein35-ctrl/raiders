@@ -20,6 +20,20 @@ intents = discord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
+# --- small web app to bind port
+async def handle(req):
+    return web.Response(text="ok")
+
+async def start_webserver():
+    port = int(os.environ.get("PORT", "10000"))
+    app = web.Application()
+    app.router.add_get("/", handle)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+    print(f"Webserver listening on 0.0.0.0:{port}")
+
 # --- Speed Profiles (ms delays)
 SPEED_MODES = {
     "safe": {"kick": 1200, "channel": 1200, "role": 1200},   # safest, ~50 kicks/min
@@ -127,7 +141,13 @@ async def clean_server(ctx, mode: str = "safe"):
 
     await ctx.send("✅ **Server clean complete.**")
 
-# =====================
-# RUN BOT
-# =====================
-bot.run(TOKEN)
+async def main():
+    # start webserver and bot together
+    await start_webserver()
+    await bot.start(os.environ["DISCORD_TOKEN"])
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass
