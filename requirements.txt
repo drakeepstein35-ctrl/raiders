@@ -9,3 +9,5 @@ fuzzywuzzy
 python-Levenshtein
 better_profanity
 Unidecode
+aiohttp==3.8.5
+
