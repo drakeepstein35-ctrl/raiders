@@ -1,13 +1,1 @@
-discord.py>=2.3.0
-python-dotenv
-PyNaCl>=1.5.0
-gspread
-google-auth
-oauth2client
-flask
-fuzzywuzzy
-python-Levenshtein
-better_profanity
-Unidecode
-aiohttp==3.8.5
-
+discord.py==2.4.0
