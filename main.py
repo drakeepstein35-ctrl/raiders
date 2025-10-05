@@ -33,7 +33,7 @@ def run_flask():
     app.run(host="0.0.0.0", port=10000)
 
 def keep_alive():
-    url = "https://pool-cft0.onrender.com"  # your Render URL
+    url = "https://raiders-dp50.onrender.com"  # your Render URL
     while True:
         try:
             requests.get(url)
