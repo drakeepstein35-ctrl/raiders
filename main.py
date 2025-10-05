@@ -3,7 +3,8 @@ from discord.ext import commands
 import asyncio
 import json
 import os
-from aiohttp import web 
+from flask import Flask
+import aiohttp
 from datetime import datetime
 
 # =====================
@@ -21,19 +22,26 @@ intents = discord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 
-# --- small web app to bind port
-async def handle(req):
-    return web.Response(text="ok")
+# ----------------- Flask for uptime -----------------
+app = Flask("")
 
-async def start_webserver():
-    port = int(os.environ.get("PORT", "10000"))
-    app = web.Application()
-    app.router.add_get("/", handle)
-    runner = web.AppRunner(app)
-    await runner.setup()
-    site = web.TCPSite(runner, "0.0.0.0", port)
-    await site.start()
-    print(f"Webserver listening on 0.0.0.0:{port}")
+@app.route("/")
+def home():
+    return "Bot is running!"
+
+def run_flask():
+    app.run(host="0.0.0.0", port=10000)
+
+def keep_alive():
+    url = "https://pool-cft0.onrender.com"  # your Render URL
+    while True:
+        try:
+            requests.get(url)
+            print("Pinged self to stay awake")
+        except Exception as e:
+            print("Ping failed:", e)
+        time.sleep(300)  # every 5 minutes
+
 
 # --- Speed Profiles (ms delays)
 SPEED_MODES = {
